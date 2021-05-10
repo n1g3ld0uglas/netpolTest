@@ -1,0 +1,12 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: default.web-allow-all-ns-monitoring
+  namespace: default
+spec:
+  tier: default
+  order: 1000
+  selector: app == "web"
+  serviceAccountSelector: ''
+  types:
+    - Ingress
