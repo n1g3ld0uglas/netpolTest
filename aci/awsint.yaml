@@ -1,0 +1,16 @@
+kubectl create -f - <<EOF
+apiVersion: operator.tigera.io/v1
+kind: AmazonCloudIntegration
+metadata:
+  name: tigera-secure
+spec:
+  nodeSecurityGroupIDs:
+  - $K8S_NODE_SGS
+  podSecurityGroupID: $POD_SG
+  vpcs:
+    - $VPC_ID
+  sqsURL: $SQS_URL
+  awsRegion: $AWS_REGION
+  enforcedSecurityGroupID: $ENFORCED_SG
+  trustEnforcedSecurityGroupID: $TRUST_SG
+EOF
