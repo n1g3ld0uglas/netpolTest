@@ -1,4 +1,3 @@
-kubectl create -f - <<EOF
 apiVersion: operator.tigera.io/v1
 kind: AmazonCloudIntegration
 metadata:
@@ -13,4 +12,3 @@ spec:
   awsRegion: $AWS_REGION
   enforcedSecurityGroupID: $ENFORCED_SG
   trustEnforcedSecurityGroupID: $TRUST_SG
-EOF
