@@ -1,6 +1,6 @@
 apiVersion: projectcalico.org/v3
 kind: Tier
 metadata:
-  name: demo
+  name: product
 spec:
   order: 600
