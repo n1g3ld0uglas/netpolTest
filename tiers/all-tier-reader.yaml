@@ -1,0 +1,18 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: all-tier-policy-reader
+rules:
+# To access Calico policy in a tier, the user requires get access to that tier. This provides get
+# access to all tiers.
+- apiGroups: ["projectcalico.org"]
+  resources: ["tiers"]
+  verbs: ["get"]
+# This allows read access of the kubernetes NetworkPolicy resources (these are always in the default tier).
+- apiGroups: ["networking.k8s.io", "extensions"]
+  resources: ["networkpolicies"]
+  verbs: ["get","watch","list"]
+# This allows read access of the Calico NetworkPolicy and GlobalNetworkPolicy resources in all tiers.
+- apiGroups: ["projectcalico.org"]
+  resources: ["tier.networkpolicies","tier.globalnetworkpolicies"]
+  verbs: ["get","watch","list"]
