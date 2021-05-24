@@ -1,0 +1,15 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: product-tier-policy-cruder
+rules:
+# To access Calico policy in a tier, the user requires get access to that tier.
+- apiGroups: ["projectcalico.org"]
+  resources: ["tiers"]
+  resourceNames: ["product"]
+  verbs: ["get"]
+# This allows configuration of the Calico NetworkPolicy resources in the net-sec tier.
+- apiGroups: ["projectcalico.org"]
+  resources: ["tier.networkpolicies"]
+  resourceNames: ["product.*"]
+  verbs: ["*"]
