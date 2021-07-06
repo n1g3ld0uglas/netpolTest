@@ -31,5 +31,5 @@ data:
         require_tls: false
     - name: slack_demo
       slack_configs:
-      - api_url: https://hooks.slack.com/services/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
+      - api_url: https://hooks.slack.com/services/XYZXYZXYZXYZXYZYXYZYXYZYXYZXYZ
         channel: '#alertmanager'
