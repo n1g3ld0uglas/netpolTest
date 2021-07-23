@@ -34,3 +34,18 @@ I recommend running this in the 'security' tier of Calico Enterprise, if you are
 ```
 kubectl apply -f allow-kube-dns.yaml
 ```
+
+## Calico OS test application
+
+Deploy a demo application
+
+```
+kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/master/release/kubernetes-manifests.yaml
+```
+
+Deploy boutiqueshop policies
+
+```
+kubectl apply -f https://raw.githubusercontent.com/tigera-solutions/tigera-eks-workshop/main/demo/boutiqueshop/policies.yaml
+```
+
