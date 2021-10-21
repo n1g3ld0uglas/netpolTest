@@ -1,8 +1,6 @@
-# netpolTest
-Kubernetes Policies without context
-
-
-
+# Network Policy Test
+Using this repo as a sandbox for any K8 testing - not the be used for workshops<br/>
+<br/>
 Allowing any pod to talk to Kube DNS to prevent scenarios where you break traffic
 ```
 apiVersion: projectcalico.org/v3
