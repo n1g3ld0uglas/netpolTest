@@ -51,7 +51,7 @@ kubectl apply -f https://raw.githubusercontent.com/tigera-solutions/tigera-eks-w
 
 ## RBAC SA's for CaliEnt
 
-Nigel
+Nigel:
 
 ```
 kubectl get secret $(kubectl get serviceaccount nigel -o jsonpath='{range .secrets[*]}{.name}{"\n"}{end}' | grep token) -o go-template='{{.data.token | base64decode}}' && echo
@@ -61,4 +61,27 @@ Taher:
 
 ```
 kubectl get secret $(kubectl get serviceaccount taher -o jsonpath='{range .secrets[*]}{.name}{"\n"}{end}' | grep token) -o go-template='{{.data.token | base64decode}}' && echo
+```
+
+## Global Alert Test (work in progress)
+
+```
+kubectl apply -f - <<EOF
+apiVersion: projectcalico.org/v3
+kind: GlobalAlert
+metadata:
+ name: frequent-dns-responses
+spec:
+ description: "Monitor for NXDomain"
+ summary: "Observed ${sum} NXDomain responses for ${qname}"
+ severity: 100
+ dataSet: dns
+ query: rcode = NXDomain 
+ aggregateBy: 
+ - qname
+ field: count
+ metric: sum
+ condition: gte
+ threshold: 1
+EOF
 ```
