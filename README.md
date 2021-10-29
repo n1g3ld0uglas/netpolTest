@@ -83,3 +83,61 @@ spec:
  threshold: 1
 EOF
 ```
+
+## Host Endpoint Test not working
+
+#### EKS:
+```
+spec:
+  tier: security
+  order: 100
+  selector: host-end-point == "test"
+  # Allow all traffic to localhost.
+  ingress:
+  - action: Allow
+    destination:
+      nets:
+      - 127.0.0.1/32
+  # Allow node port access only from specific CIDR.
+  - action: Deny
+    protocol: TCP
+    source:
+      notNets:
+      - ${PUB_IP}
+    destination:
+      ports:
+      - 30080
+  doNotTrack: false
+  applyOnForward: true
+  preDNAT: true
+  types:
+    - Ingress
+```
+
+#### AKS:
+```
+spec:
+  tier: security
+  order: 100
+  selector: host-end-point == "test"
+  # Allow all traffic to localhost.
+  ingress:
+  - action: Allow
+    destination:
+      nets:
+      - 127.0.0.1/32
+  # Deny node port access from specific CIDR.
+  - action: Deny
+    protocol: TCP
+    source:
+      nets:
+      - {PRV_IP}
+    destination:
+      ports:
+      - 30080
+  doNotTrack: false
+  applyOnForward: true
+  preDNAT: true
+  types:
+    - Ingress
+```
