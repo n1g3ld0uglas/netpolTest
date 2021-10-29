@@ -84,7 +84,16 @@ spec:
 EOF
 ```
 
-## Host Endpoint Test not working
+## Host Endpoint Test Not Working
+
+In which circumstance we will see the “deny” flow for HEP? <br/>
+I tried two use cases so far: <br/>
+<br/>
+With EKS, I open the port in EKS security group for 0.0.0.0 cidr, and apply policy to deny all then allow one cidr from external server. <br/>
+I was able to see the allow flow with external public IP but not able to see other deny flow logs. <br/>
+<br/>
+With AKS,  I peered my vm vnet and AKS vnet, and was able to deny the traffic from vm to one of AKS node by apply a deny policy with private ip of vm. <br/>
+However, I’m not able to see the flow logs in service graph (including allow & deny flow from my VM). <br/>
 
 #### EKS:
 ```
