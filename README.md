@@ -169,6 +169,10 @@ In the previous example policies, the label ```k8s-role: node``` is used to iden
 kubectl label node node1 k8s-role=node
 ```
 
+![host-forward-traffic](https://user-images.githubusercontent.com/82048393/142612074-0534815f-d510-4e65-8f67-40d42df8afde.png)
+
+
+
 ## Calico OSS Test Application
 
 Deploy a demo application
@@ -181,20 +185,6 @@ Deploy boutiqueshop policies
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/tigera-solutions/tigera-eks-workshop/main/demo/boutiqueshop/policies.yaml
-```
-
-## RBAC SA's for CaliEnt
-
-Nigel:
-
-```
-kubectl get secret $(kubectl get serviceaccount nigel -o jsonpath='{range .secrets[*]}{.name}{"\n"}{end}' | grep token) -o go-template='{{.data.token | base64decode}}' && echo
-```
-
-Taher:
-
-```
-kubectl get secret $(kubectl get serviceaccount taher -o jsonpath='{range .secrets[*]}{.name}{"\n"}{end}' | grep token) -o go-template='{{.data.token | base64decode}}' && echo
 ```
 
 ## Global Alert Test (work in progress)
