@@ -1,4 +1,4 @@
-# Network Policy Test
+# Calico Network Policy Testing
 Using this repo as a sandbox for any K8 testing - not the be used for workshops<br/>
 <br/>
 Allowing any pod to talk to Kube DNS to prevent scenarios where you break traffic
@@ -34,11 +34,9 @@ kubectl apply -f allow-kube-dns.yaml
 ```
 
 ## Set policy to allow external traffic for cluster IPs
-
-
 Add rules to allow the external traffic for each clusterIP. <br/>
 The following example allows connections to two cluster IPs. <br/>
-Make sure you add applyOnForward and preDNAT rules.
+Make sure you add ```applyOnForward``` and ```preDNAT``` rules.
 
 ```
 apiVersion: projectcalico.org/v3
@@ -92,8 +90,63 @@ spec:
       - 192.168.0.0/16 # Pod CIDR
 ```
 
+## Add a rule to allow traffic destined for all host endpoints
+Or, you can add rules that allow specific host traffic including Kubernetes and Calico. <br/>
+Without this rule, normal host traffic is blocked.
 
-## Calico OS test application
+```
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-traffic-hostendpoints
+spec:
+  selector: k8s-role == 'node'
+  types:
+  - Ingress
+  # Allow traffic to the node (not nodePorts, TCP)
+  - action: Allow
+    protocol: TCP
+    destination:
+      selector: k8s-role == 'node'
+      notPorts: ["30000:32767"] # nodePort range
+  # Allow traffic to the node (not nodePorts, UDP)
+  - action: Allow
+    protocol: UDP
+    destination:
+      selector: k8s-role == 'node'
+      notPorts: ["30000:32767"] # nodePort range
+```
+
+## Create a global network policy that selects pods
+In this step, you create a GlobalNetworkPolicy that selects the same set of pods as your Kubernetes Service. <br/>
+Add rules that allow host endpoints to access the service ports.
+
+```
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-nodes-svc-a
+spec:
+  selector: k8s-svc == 'svc-a'
+  types:
+  - Ingress
+  ingress:
+  - action: Allow
+    protocol: TCP
+    source:
+      selector: k8s-role == 'node'
+    destination:
+      ports: [80, 443]
+  - action: Allow
+    protocol: UDP
+    source:
+      selector: k8s-role == 'node'
+    destination:
+      ports: [80, 443]
+```
+
+
+## Calico OSS Test Application
 
 Deploy a demo application
 
