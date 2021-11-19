@@ -33,6 +33,66 @@ I recommend running this in the 'security' tier of Calico Enterprise, if you are
 kubectl apply -f allow-kube-dns.yaml
 ```
 
+## Set policy to allow external traffic for cluster IPs
+
+
+Add rules to allow the external traffic for each clusterIP. <br/>
+The following example allows connections to two cluster IPs. <br/>
+Make sure you add applyOnForward and preDNAT rules.
+
+```
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-cluster-ips
+spec:
+  selector: k8s-role == 'node'
+  types:
+  - Ingress
+  applyOnForward: true
+  preDNAT: true
+  ingress:
+  # Allow 50.60.0.0/16 to access Cluster IP A
+  - action: Allow
+    source:
+      nets:
+      - 50.60.0.0/16
+    destination:
+      nets:
+      - 10.20.30.40/32 # Cluster IP A
+  # Allow 70.80.90.0/24 to access Cluster IP B
+  - action: Allow
+    source:
+      nets:
+      - 70.80.90.0/24
+    destination:
+      nets:
+      - 10.20.30.41/32 # Cluster IP B
+```
+
+## Add a rule to allow traffic destined for the pod CIDR
+Without this rule, normal pod-to-pod traffic is blocked because the policy applies to forwarded traffic.
+
+```
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-to-pods
+spec:
+  selector: k8s-role == 'node'
+  types:
+  - Ingress
+  applyOnForward: true
+  preDNAT: true
+  ingress:
+  # Allow traffic forwarded to pods
+  - action: Allow
+    destination:
+      nets:
+      - 192.168.0.0/16 # Pod CIDR
+```
+
+
 ## Calico OS test application
 
 Deploy a demo application
