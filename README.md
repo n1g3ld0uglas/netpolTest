@@ -146,6 +146,29 @@ spec:
 ```
 
 
+## Create HostEndpoints for the above Policy Configurations
+Create HostEndpoints for the interface of each host that will receive traffic for the clusterIPs. <br/>
+Be sure to label them so they are selected by the policy in Step 2 <br/>
+(Add a rule to allow traffic destined for the pod CIDR), and the rules in Step 3.
+
+```
+kubectl patch kubecontrollersconfiguration default --patch='{"spec": {"controllers": {"node": {"hostEndpoint": {"autoCreate": "Enabled"}}}}}'
+```
+
+If successful, host endpoints are created for each of your cluster’s nodes:
+```
+kubectl get heps -o wide
+```
+
+For example, to add the label kubernetes-host to all nodes and their host endpoints:
+```
+kubectl label nodes --all kubernetes-host=
+```
+In the previous example policies, the label ```k8s-role: node``` is used to identify these HostEndpoints.
+```
+kubectl label node node1 k8s-role=node
+```
+
 ## Calico OSS Test Application
 
 Deploy a demo application
