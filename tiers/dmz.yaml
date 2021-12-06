@@ -4,7 +4,7 @@ metadata:
   name: product.dmz
   namespace: storefront
 spec:
-  tier: default
+  tier: product
   order: 0
   selector: fw-zone == "dmz"
   serviceAccountSelector: ''
