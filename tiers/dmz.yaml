@@ -4,14 +4,15 @@ metadata:
   name: product.dmz
   namespace: storefront
 spec:
-  tier: product
+  tier: default
   order: 0
   selector: fw-zone == "dmz"
   serviceAccountSelector: ''
   ingress:
     - action: Allow
       source:
-        selector: type == "public"
+        nets:
+          - 18.0.0.0/16
       destination: {}
     - action: Deny
       source: {}
