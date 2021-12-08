@@ -1,30 +1,30 @@
 apiVersion: projectcalico.org/v3
 kind: GlobalNetworkPolicy
 metadata:
-  name: ingress-k8s-masters
+  name: platform.master-node-policy
 spec:
-  selector: has(node-role.kubernetes.io/master) has(kubernetes-host) && env == 'master'
-  # This rule allows ingress to the Kubernetes API server.
+  tier: platform
+  order: 2100
+  selector: env == "master"
+  namespaceSelector: ''
+  serviceAccountSelector: ''
   ingress:
-  - action: Allow
-    protocol: TCP
-    destination:
-      ports:
-      # kube API server
-      - 6443
-  # This rule allows all traffic to localhost.
-  - action: Allow
-    destination:
-      nets:
-      - 127.0.0.0/8
-  # This rule is required in multi-master clusters where etcd pods are colocated with the masters.
-  # Allow the etcd pods on the masters to communicate with each other. 2380 is the etcd peer port.
-  # This rule also allows the masters to access the kubelet API on other masters (including itself).
-  - action: Allow
-    protocol: TCP
-    source:
-      selector: has(node-role.kubernetes.io/master)
-    destination:
-      ports:
-      - 2380
-      - 10250
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        ports:
+          - '22'
+  egress:
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        ports:
+          - '22'
+  doNotTrack: false
+  applyOnForward: false
+  preDNAT: false
+  types:
+    - Ingress
+    - Egress
