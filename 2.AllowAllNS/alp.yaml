@@ -1,0 +1,15 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: customer
+spec:
+  selector: app == 'tradingapp'
+  ingress:
+   - action: Allow
+     http:
+       methods: ["GET"]
+       paths:
+         - exact: "/projects/calico"
+         - prefix: "/users"
+  egress:
+    - action: Allow
